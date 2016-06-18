@@ -1,0 +1,54 @@
+---
+swagger: "2.0"
+info:
+  description: "Stop using command line with this ggsci RESTful API"
+  version: "1.0.0"
+  title: "GGSCI API"
+host: "0.0.0.0:5000"
+basePath: "/v1"
+schemes:
+  - "http"
+  - "https"
+consumes:
+  - "application/json"
+  - "text/xml"
+produces:
+  - "application/json"
+  - "text/html"
+paths:
+  /manager:
+    get:
+      tags:
+      - "Manager"
+      summary: "Analagous to INFO MANAGER or STATUS MANAGER command"
+      description: "Returns information about the Manager port and child processes.\n"
+      operationId: "controllers.default_controller.manager_get"
+      parameters: []
+      responses:
+        200:
+          description: "An array of information"
+          schema:
+            title: Manager
+            type: boolean
+            items:
+              $ref: '#/definitions/Manager'
+  /manager/childstatus:
+    get:
+      tags:
+      - "Manager"
+      summary: "Analagous to SEND MANAGER CHILDSTATUS DEBUG"
+      description: "Retrieves status information about processes and the port numbers\n\
+        that are allocated to process started by Manager.\n"
+      operationId: "controllers.default_controller.manager_childstatus_get"
+      parameters: []
+      responses:
+        200:
+          description: "An array of information"
+definitions:
+  Manager:
+    type: object
+    properties:
+      result:
+        type: boolean
+      raw:
+        type: string

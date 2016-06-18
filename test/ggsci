@@ -1,0 +1,53 @@
+#!/bin/sh
+HOSTNAME=$(hostname -s)
+PORT="5433"
+
+_ggsci_header_footer () {
+	local cmd=$1
+	echo "
+Brocle GoldenGuff Command Interpreter
+Version 11.2.1.0.31 20976570 BGGCORE_11.2.1.0.0OBGGP_PLATFORMS_150815.0601
+Linux, x64, 64bit (optimized), PostgreSQL on Aug 20 2015 13:04:24
+
+Copyright (C) 1982, 2016, Brocle and/or its affiliates. All rights reserved.
+
+
+
+GGSCI ($HOSTNAME) 1>
+$cmd
+
+
+GGSCI ($HOSTNAME) 2> " | awk 'NR>1{print PREV} {PREV=$0} END{printf("%s",$0)}'
+}
+
+_info_manager () {
+	local INFO_MANAGER="Manager is running (IP port $HOSTNAME.$PORT)."
+	_ggsci_header_footer "$INFO_MANAGER"
+}
+
+_send_manager_childstatus_debug () {
+	local CHILDSTATUS_DEBUG="\
+Sending CHILDSTATUS, request to MANAGER ...
+
+Child Process Status - 1 Entries
+
+ID      Group   Process Retry Retry Time          Start Time          Port
+---- -------- --------- ----- ------------------- ------------------- ----
+   0 RCDCXXXX      9614    22 2016/06/17 22:08:11 2016/06/07 17:21:50 7840
+"
+	_ggsci_header_footer "$CHILDSTATUS_DEBUG"
+}
+
+while read line
+do
+	case "$line" in
+		'INFO MGR'|'INFO MANAGER'|'STATUS MANAGER')
+			_info_manager
+			;;
+		'SEND MANAGER CHILDSTATUS DEBUG')
+			_send_manager_childstatus_debug
+			;;
+		*)
+			;;
+	esac
+done < "${1:-/dev/stdin}"
