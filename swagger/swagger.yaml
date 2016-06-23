@@ -7,14 +7,14 @@ info:
 host: "0.0.0.0:5000"
 basePath: "/v1"
 schemes:
-  - "http"
-  - "https"
+- "http"
+- "https"
 consumes:
-  - "application/json"
-  - "text/xml"
+- "application/json"
+- "text/xml"
 produces:
-  - "application/json"
-  - "text/html"
+- "application/json"
+- "text/html"
 paths:
   /manager:
     get:
@@ -28,10 +28,26 @@ paths:
         200:
           description: "An array of information"
           schema:
-            title: Manager
-            type: boolean
-            items:
-              $ref: '#/definitions/Manager'
+            type: "boolean"
+            title: "Manager"
+      x-tags:
+      - tag: "Manager"
+    post:
+      tags:
+      - "Manager"
+      operationId: "controllers.default_controller.manager_post"
+      parameters:
+        - name: command
+          description: |
+            Command you want to send the manager
+          in: body
+          schema:
+            $ref: "#/definitions/Command"
+      responses:
+        200:
+          description: "raw command result"
+          schema:
+            $ref: "#/definitions/RawResponse"
   /manager/childstatus:
     get:
       tags:
@@ -44,11 +60,23 @@ paths:
       responses:
         200:
           description: "An array of information"
+      x-tags:
+      - tag: "Manager"
 definitions:
   Manager:
-    type: object
+    type: "object"
     properties:
       result:
-        type: boolean
+        type: "boolean"
       raw:
-        type: string
+        type: "string"
+  Command:
+    type: "object"
+    properties:
+      command:
+        type: "string"
+  RawResponse:
+    type: "object"
+    properties:
+      response:
+        type: "string"

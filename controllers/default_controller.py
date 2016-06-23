@@ -12,6 +12,12 @@ def ggsci(cmd) -> str:
         stdout=subprocess.PIPE).stdout.decode("utf-8")
     return output
 
+def manager_post(command) -> str:
+    result = command.get('command')
+    result = ggsci(result.upper() + ' MANAGER')
+    result = [{'response':result}]
+    return json.dumps(result)
+
 def manager_childstatus_get() -> str:
     result = ggsci('SEND MANAGER CHILDSTATUS DEBUG')
     return result
